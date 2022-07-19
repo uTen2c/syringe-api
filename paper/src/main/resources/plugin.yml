@@ -1,0 +1,4 @@
+name: syringe-api
+version: ${version}
+main: dev.uten2c.syringe.api.SyringePaper
+api-version: 1.19
