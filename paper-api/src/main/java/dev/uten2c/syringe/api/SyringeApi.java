@@ -24,9 +24,13 @@ public abstract class SyringeApi extends AbstractSyringeApi {
         SyringeApi.instance = instance;
     }
 
-    public abstract boolean isSyringeUser(@NotNull Player player);
+    public boolean isSyringeUser(@NotNull Player player) {
+        return isSyringeUser(player.getUniqueId());
+    }
 
-    public abstract Optional<SyringeVersion> getSyringeVersion(@NotNull Player player);
+    public Optional<SyringeVersion> getSyringeVersion(@NotNull Player player) {
+        return getSyringeVersion(player.getUniqueId());
+    }
 
     public abstract void registerKeybinding(@NotNull Keybinding keybinding);
 }
