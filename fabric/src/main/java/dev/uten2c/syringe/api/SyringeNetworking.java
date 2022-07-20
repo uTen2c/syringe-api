@@ -11,7 +11,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public final class SyringeNetworking {
-    private static final String NAMESPACE = "syringe";
+    public static final String NAMESPACE = "syringe";
 
     // Login
     static final Identifier HANDSHAKE_ID = new Identifier(NAMESPACE, "handshake");

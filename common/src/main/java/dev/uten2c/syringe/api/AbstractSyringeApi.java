@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public abstract class AbstractSyringeApi {
+    public static final int DEFAULT_MESSAGE_LINE_HEIGHT = 9;
     static final ConcurrentMap<UUID, SyringeVersion> PLAYER_VERSION_MAP = new ConcurrentHashMap<>();
 
     public boolean isSyringeUser(@NotNull UUID uniqueId) {

@@ -1,6 +1,8 @@
 package dev.uten2c.syringe.api;
 
 import dev.uten2c.syringe.api.keybinding.Keybinding;
+import dev.uten2c.syringe.api.message.MessageContext;
+import dev.uten2c.syringe.api.perspective.Perspective;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,4 +35,18 @@ public abstract class SyringeApi extends AbstractSyringeApi {
     }
 
     public abstract void registerKeybinding(@NotNull Keybinding keybinding);
+
+    public abstract void displayMessage(@NotNull Player player, @NotNull String id, @NotNull MessageContext context);
+
+    public abstract void discardMessage(@NotNull Player player, @NotNull String id, long fadeout);
+
+    public void discardMessage(@NotNull Player player, @NotNull String id) {
+        discardMessage(player, id, 0);
+    }
+
+    public abstract void clearMessage(@NotNull Player player);
+
+    public abstract void setPerspective(@NotNull Player player, @NotNull Perspective perspective);
+
+    public abstract void lockPerspective(@NotNull Player player, boolean lock);
 }

@@ -1,5 +1,6 @@
 package dev.uten2c.syringe.api;
 
+import dev.uten2c.syringe.api.command.SyringeCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
@@ -14,5 +15,11 @@ public final class SyringePaper extends JavaPlugin {
     public void onEnable() {
         SyringeNetworking.setup(this);
         Bukkit.getPluginManager().registerEvents(new PluginEventListener(), this);
+        SyringeCommand.register();
+    }
+
+    @Override
+    public void onDisable() {
+        SyringeCommand.unregister();
     }
 }
