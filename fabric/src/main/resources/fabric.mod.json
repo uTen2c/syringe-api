@@ -19,7 +19,7 @@
     "syringe-api.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.18",
+    "minecraft": ">=${minecraft}",
     "fabricloader": ">=0.11.6",
     "fabric-api-base": "*",
     "fabric-networking-api-v1": "*",

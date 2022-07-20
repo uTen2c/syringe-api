@@ -7,6 +7,12 @@ plugins {
 group = "dev.uten2c"
 version = Version.PROJECT
 
+tasks.processResources {
+    filesMatching("plugin.yml") {
+        expand(mapOf("version" to project.version))
+    }
+}
+
 dependencies {
     paperDevBundle(Version.PAPER)
     implementation(project(":common"))

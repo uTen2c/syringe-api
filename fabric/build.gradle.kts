@@ -7,7 +7,12 @@ version = Version.PROJECT
 
 tasks.processResources {
     filesMatching("fabric.mod.json") {
-        expand(mapOf("version" to project.version))
+        expand(
+            mapOf(
+                "version" to project.version,
+                "minecraft" to Version.MINECRAFT
+            )
+        )
     }
 }
 
