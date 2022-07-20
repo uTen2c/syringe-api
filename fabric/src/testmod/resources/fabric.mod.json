@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "testmod",
+  "version": "1.0-SNAPSHOT",
+  "name": "Syringe API Test Mod",
+  "description": "",
+  "license": "Apache-2.0",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "dev.uten2c.syringe.api.testmod.TestMod"
+    ]
+  }
+}

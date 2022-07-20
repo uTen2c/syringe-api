@@ -8,4 +8,4 @@ pluginManagement {
 
 rootProject.name = "syringe-api"
 
-include("common", "fabric-api", "fabric", "paper-api", "paper")
+include("common", "fabric", "paper-api", "paper")

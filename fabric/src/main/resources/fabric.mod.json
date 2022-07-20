@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "syringe-api",
+  "version": "${version}",
+  "name": "Syringe API",
+  "description": "// TODO",
+  "license": "Apache-2.0",
+  "environment": "server",
+  "accessWidener": "syringe-api.accesswidener",
+  "entrypoints": {
+    "main": [
+      "dev.uten2c.syringe.api.SyringeFabric"
+    ]
+  },
+  "mixins": [
+    "syringe-api.mixins.json"
+  ],
+  "depends": {
+    "minecraft": ">=1.18",
+    "fabricloader": ">=0.11.6",
+    "fabric-api-base": "*",
+    "fabric-networking-api-v1": "*"
+  }
+}
