@@ -5,10 +5,10 @@ plugins {
 }
 
 group = "dev.uten2c"
-version = "1.0-SNAPSHOT"
+version = Version.PROJECT
 
 dependencies {
-    paperDevBundle("1.19-R0.1-SNAPSHOT")
+    paperDevBundle(Version.PAPER)
     implementation(project(":common"))
     implementation(project(":paper-api"))
 }

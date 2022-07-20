@@ -3,9 +3,9 @@ plugins {
 }
 
 group = "dev.uten2c"
-version = "1.0-SNAPSHOT"
+version = Version.PROJECT
 
 dependencies {
-    shadow("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
+    shadow("io.papermc.paper:paper-api:${Version.PAPER}")
     implementation(project(":common"))
 }

@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "dev.uten2c"
-version = "1.0-SNAPSHOT"
+version = Version.PROJECT
 
 tasks.processResources {
     filesMatching("fabric.mod.json") {
@@ -26,11 +26,11 @@ fun DependencyHandlerScope.includeAndImplementation(dep: Any) {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:1.19")
-    mappings("net.fabricmc:yarn:1.19+build.4:v2")
-    modImplementation("net.fabricmc:fabric-loader:0.14.8")
+    minecraft("com.mojang:minecraft:${Version.MINECRAFT}")
+    mappings("net.fabricmc:yarn:${Version.YARN}:v2")
+    modImplementation("net.fabricmc:fabric-loader:${Version.LOADER}")
     arrayOf("fabric-api-base", "fabric-networking-api-v1", "fabric-command-api-v2")
-        .map { fabricApi.module(it, "0.57.0+1.19") }
+        .map { fabricApi.module(it, Version.FABRIC) }
         .forEach(::modImplementation)
     includeAndImplementation(project(":common"))
 }

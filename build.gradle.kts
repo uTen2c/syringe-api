@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "dev.uten2c"
-version = "1.0-SNAPSHOT"
+version = Version.PROJECT
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
