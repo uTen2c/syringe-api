@@ -17,4 +17,8 @@ public abstract class AbstractSyringeApi {
     public Optional<SyringeVersion> getSyringeVersion(@NotNull UUID uniqueId) {
         return Optional.ofNullable(PLAYER_VERSION_MAP.get(uniqueId));
     }
+
+    public void resetPlayerStates(@NotNull UUID uniqueId) {
+        PLAYER_VERSION_MAP.remove(uniqueId);
+    }
 }
