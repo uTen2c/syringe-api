@@ -4,9 +4,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.uten2c.syringe.api.SyringeApi;
+import dev.uten2c.syringe.api.command.argument.MessagePositionArgumentType;
+import dev.uten2c.syringe.api.command.argument.PerspectiveArgumentType;
 import dev.uten2c.syringe.api.message.MessageContext;
-import dev.uten2c.syringe.api.message.MessagePosition;
-import dev.uten2c.syringe.api.perspective.Perspective;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.TextArgumentType;
@@ -35,26 +35,22 @@ public class SyringeCommand {
     }
 
     private static LiteralArgumentBuilder<ServerCommandSource> message() {
-        var lineHeight = argument("line height", IntegerArgumentType.integer());
-        for (var position : MessagePosition.values()) {
-            lineHeight.then(literal(position.name().toLowerCase()).then(argument("offset x", IntegerArgumentType.integer()).then(argument("offset y", IntegerArgumentType.integer()).then(argument("fadein", LongArgumentType.longArg()).then(argument("message", TextArgumentType.text()).executes(ctx -> {
-                var id = StringArgumentType.getString(ctx, "id");
-                var context = new MessageContext.Builder()
-                    .message(TextArgumentType.getTextArgument(ctx, "message"))
-                    .shadow(BoolArgumentType.getBool(ctx, "shadow"))
-                    .size(FloatArgumentType.getFloat(ctx, "size"))
-                    .lineHeight(IntegerArgumentType.getInteger(ctx, "line height"))
-                    .position(position)
-                    .offsetX(IntegerArgumentType.getInteger(ctx, "offset x"))
-                    .offsetY(IntegerArgumentType.getInteger(ctx, "offset y"))
-                    .fadein(LongArgumentType.getLong(ctx, "fadein"))
-                    .build();
-                EntityArgumentType.getPlayers(ctx, "targets")
-                    .forEach(target -> API.displayMessage(target, id, context));
-                return 1;
-            }))))));
-        }
-        var display = literal("display").then(argument("targets", EntityArgumentType.players()).then(argument("id", StringArgumentType.string()).then(argument("shadow", BoolArgumentType.bool()).then(argument("size", FloatArgumentType.floatArg(0)).then(lineHeight)))));
+        var display = literal("display").then(argument("targets", EntityArgumentType.players()).then(argument("id", StringArgumentType.string()).then(argument("shadow", BoolArgumentType.bool()).then(argument("size", FloatArgumentType.floatArg(0)).then(argument("line height", IntegerArgumentType.integer()).then(argument("position", MessagePositionArgumentType.messagePosition()).then(argument("offset x", IntegerArgumentType.integer()).then(argument("offset y", IntegerArgumentType.integer()).then(argument("fadein", LongArgumentType.longArg()).then(argument("message", TextArgumentType.text()).executes(ctx -> {
+            var id = StringArgumentType.getString(ctx, "id");
+            var context = new MessageContext.Builder()
+                .message(TextArgumentType.getTextArgument(ctx, "message"))
+                .shadow(BoolArgumentType.getBool(ctx, "shadow"))
+                .size(FloatArgumentType.getFloat(ctx, "size"))
+                .lineHeight(IntegerArgumentType.getInteger(ctx, "line height"))
+                .position(MessagePositionArgumentType.getMessagePosition(ctx, "position"))
+                .offsetX(IntegerArgumentType.getInteger(ctx, "offset x"))
+                .offsetY(IntegerArgumentType.getInteger(ctx, "offset y"))
+                .fadein(LongArgumentType.getLong(ctx, "fadein"))
+                .build();
+            EntityArgumentType.getPlayers(ctx, "targets")
+                .forEach(target -> API.displayMessage(target, id, context));
+            return 1;
+        })))))))))));
         var discard = literal("discard").then(argument("targets", EntityArgumentType.players()).then(argument("id", StringArgumentType.string()).then(argument("fadeout", LongArgumentType.longArg(0)).executes(ctx -> {
             var id = StringArgumentType.getString(ctx, "id");
             var fadeout = LongArgumentType.getLong(ctx, "fadeout");
@@ -70,14 +66,11 @@ public class SyringeCommand {
     }
 
     private static LiteralArgumentBuilder<ServerCommandSource> perspective() {
-        var t = argument("targets", EntityArgumentType.players());
-        for (var perspective : Perspective.values()) {
-            t.then(literal(perspective.name().toLowerCase()).executes(ctx -> {
-                EntityArgumentType.getPlayers(ctx, "targets").forEach(target -> API.setPerspective(target, perspective));
-                return 1;
-            }));
-        }
-        var set = literal("set").then(t);
+        var set = literal("set").then(argument("targets", EntityArgumentType.players()).then(argument("perspective", PerspectiveArgumentType.perspective()).executes(ctx -> {
+            var perspective = PerspectiveArgumentType.getPerspective(ctx, "perspective");
+            EntityArgumentType.getPlayers(ctx, "targets").forEach(target -> API.setPerspective(target, perspective));
+            return 1;
+        })));
         var lock = literal("lock").then(argument("targets", EntityArgumentType.players()).then(argument("lock", BoolArgumentType.bool()).executes(ctx -> {
             var isLock = BoolArgumentType.getBool(ctx, "lock");
             EntityArgumentType.getPlayers(ctx, "targets").forEach(target -> API.lockPerspective(target, isLock));

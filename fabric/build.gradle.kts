@@ -34,7 +34,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${Version.MINECRAFT}")
     mappings("net.fabricmc:yarn:${Version.YARN}:v2")
     modImplementation("net.fabricmc:fabric-loader:${Version.LOADER}")
-    arrayOf("fabric-api-base", "fabric-networking-api-v1", "fabric-command-api-v2")
+    arrayOf("fabric-api-base", "fabric-networking-api-v1", "fabric-command-api-v2", "fabric-registry-sync-v0")
         .map { fabricApi.module(it, Version.FABRIC) }
         .forEach(::modImplementation)
     includeAndImplementation(project(":common"))
