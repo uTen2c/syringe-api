@@ -14,6 +14,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R1.CraftServer;
+import org.bukkit.entity.Player;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -28,6 +29,13 @@ public final class SyringeCommand {
 
     public static void register() {
         DISPATCHER.register(literal(COMMAND_NAME)
+            .requires(source -> {
+                if (!source.hasPermission(2)) {
+                    return false;
+                }
+                var entity = source.getBukkitEntity();
+                return entity == null || (entity instanceof Player player && API.isSyringeUser(player));
+            })
             .then(message())
             .then(perspective())
         );

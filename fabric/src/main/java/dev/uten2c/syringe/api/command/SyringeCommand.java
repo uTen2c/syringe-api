@@ -12,6 +12,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.TextArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -21,6 +22,13 @@ public class SyringeCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(literal("syringe")
+            .requires(source -> {
+                if (!source.hasPermissionLevel(2)) {
+                    return false;
+                }
+                var entity = source.getEntity();
+                return entity == null || (entity instanceof ServerPlayerEntity player && API.isSyringeUser(player));
+            })
             .then(message())
             .then(perspective())
         );
