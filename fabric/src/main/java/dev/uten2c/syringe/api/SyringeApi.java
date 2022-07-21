@@ -1,5 +1,6 @@
 package dev.uten2c.syringe.api;
 
+import dev.uten2c.syringe.api.hud.HudPart;
 import dev.uten2c.syringe.api.keybinding.Keybinding;
 import dev.uten2c.syringe.api.message.MessageContext;
 import dev.uten2c.syringe.api.perspective.Perspective;
@@ -7,6 +8,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Optional;
 
 public abstract class SyringeApi extends AbstractSyringeApi {
@@ -49,4 +52,16 @@ public abstract class SyringeApi extends AbstractSyringeApi {
     public abstract void setPerspective(@NotNull ServerPlayerEntity player, @NotNull Perspective perspective);
 
     public abstract void lockPerspective(@NotNull ServerPlayerEntity player, boolean lock);
+
+    public abstract void hideHudParts(@NotNull ServerPlayerEntity player, @NotNull Collection<HudPart> hudParts);
+
+    public void hideHudParts(@NotNull ServerPlayerEntity player, @NotNull HudPart... hudParts) {
+        hideHudParts(player, Arrays.asList(hudParts));
+    }
+
+    public abstract void showHudParts(@NotNull ServerPlayerEntity player, @NotNull Collection<HudPart> hudParts);
+
+    public void showHudParts(@NotNull ServerPlayerEntity player, @NotNull HudPart... hudParts) {
+        showHudParts(player, Arrays.asList(hudParts));
+    }
 }

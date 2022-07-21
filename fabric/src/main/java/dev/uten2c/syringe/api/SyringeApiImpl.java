@@ -1,5 +1,6 @@
 package dev.uten2c.syringe.api;
 
+import dev.uten2c.syringe.api.hud.HudPart;
 import dev.uten2c.syringe.api.keybinding.Keybinding;
 import dev.uten2c.syringe.api.message.MessageContext;
 import dev.uten2c.syringe.api.perspective.Perspective;
@@ -11,6 +12,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -61,6 +63,20 @@ public class SyringeApiImpl extends SyringeApi {
     public void lockPerspective(@NotNull ServerPlayerEntity player, boolean lock) {
         sendPacket(player, SyringeNetworking.PERSPECTIVE_LOCK_ID, buf -> {
             buf.writeBoolean(lock);
+        });
+    }
+
+    @Override
+    public void hideHudParts(@NotNull ServerPlayerEntity player, @NotNull Collection<HudPart> hudParts) {
+        sendPacket(player, SyringeNetworking.HUD_HIDE_ID, buf -> {
+            buf.writeCollection(hudParts, PacketByteBuf::writeEnumConstant);
+        });
+    }
+
+    @Override
+    public void showHudParts(@NotNull ServerPlayerEntity player, @NotNull Collection<HudPart> hudParts) {
+        sendPacket(player, SyringeNetworking.HUD_SHOW_ID, buf -> {
+            buf.writeCollection(hudParts, PacketByteBuf::writeEnumConstant);
         });
     }
 

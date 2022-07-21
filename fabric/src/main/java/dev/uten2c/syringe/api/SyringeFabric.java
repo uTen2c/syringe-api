@@ -2,6 +2,7 @@ package dev.uten2c.syringe.api;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import dev.uten2c.syringe.api.command.SyringeCommand;
+import dev.uten2c.syringe.api.command.argument.HudPartArgumentType;
 import dev.uten2c.syringe.api.command.argument.MessagePositionArgumentType;
 import dev.uten2c.syringe.api.command.argument.PerspectiveArgumentType;
 import net.fabricmc.api.ModInitializer;
@@ -26,6 +27,7 @@ public class SyringeFabric implements ModInitializer, PreLaunchEntrypoint {
         CommandRegistrationCallback.EVENT.register(SyringeCommand::register);
         registerArgumentType("position", MessagePositionArgumentType.class, MessagePositionArgumentType::messagePosition);
         registerArgumentType("perspective", PerspectiveArgumentType.class, PerspectiveArgumentType::perspective);
+        registerArgumentType("hud_part", HudPartArgumentType.class, HudPartArgumentType::hudPart);
     }
 
     private static <T extends ArgumentType<?>> void registerArgumentType(String id, Class<T> clazz, Supplier<T> typeSupplier) {

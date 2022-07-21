@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.uten2c.syringe.api.SyringeApi;
+import dev.uten2c.syringe.api.command.argument.HudPartArgumentType;
 import dev.uten2c.syringe.api.command.argument.MessagePositionArgumentType;
 import dev.uten2c.syringe.api.command.argument.PerspectiveArgumentType;
 import dev.uten2c.syringe.api.message.MessageContext;
@@ -66,6 +67,7 @@ public final class SyringeCommand {
             })
             .then(message())
             .then(perspective())
+            .then(hud())
         );
         try {
             registerArgumentTypes();
@@ -83,6 +85,7 @@ public final class SyringeCommand {
 
         registerArgumentType("position", MessagePositionArgumentType.class, MessagePositionArgumentType::messagePosition);
         registerArgumentType("perspective", PerspectiveArgumentType.class, PerspectiveArgumentType::perspective);
+        registerArgumentType("hud_part", HudPartArgumentType.class, HudPartArgumentType::hudPart);
 
         ((MappedRegistry<?>) Registry.COMMAND_ARGUMENT_TYPE).freeze();
     }
@@ -138,6 +141,24 @@ public final class SyringeCommand {
             return 1;
         })));
         return literal("perspective").then(set).then(lock);
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> hud() {
+        var hide = literal("hide").then(argument("targets", EntityArgument.players()).then(argument("part", HudPartArgumentType.hudPart()).executes(ctx -> {
+            var hudPart = HudPartArgumentType.getHudPart(ctx, "part");
+            EntityArgument.getPlayers(ctx, "targets").stream()
+                .map(ServerPlayer::getBukkitEntity)
+                .forEach(target -> API.hideHudParts(target, hudPart));
+            return 1;
+        })));
+        var show = literal("show").then(argument("targets", EntityArgument.players()).then(argument("part", HudPartArgumentType.hudPart()).executes(ctx -> {
+            var hudPart = HudPartArgumentType.getHudPart(ctx, "part");
+            EntityArgument.getPlayers(ctx, "targets").stream()
+                .map(ServerPlayer::getBukkitEntity)
+                .forEach(target -> API.showHudParts(target, hudPart));
+            return 1;
+        })));
+        return literal("hud").then(hide).then(show);
     }
 
     @SuppressWarnings("unchecked")

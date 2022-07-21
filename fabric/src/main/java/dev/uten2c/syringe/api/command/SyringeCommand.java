@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.uten2c.syringe.api.SyringeApi;
+import dev.uten2c.syringe.api.command.argument.HudPartArgumentType;
 import dev.uten2c.syringe.api.command.argument.MessagePositionArgumentType;
 import dev.uten2c.syringe.api.command.argument.PerspectiveArgumentType;
 import dev.uten2c.syringe.api.message.MessageContext;
@@ -31,6 +32,7 @@ public class SyringeCommand {
             })
             .then(message())
             .then(perspective())
+            .then(hud())
         );
     }
 
@@ -77,5 +79,20 @@ public class SyringeCommand {
             return 1;
         })));
         return literal("perspective").then(set).then(lock);
+    }
+
+    private static LiteralArgumentBuilder<ServerCommandSource> hud() {
+        var hud = literal("hud");
+        var hide = literal("hide").then(argument("targets", EntityArgumentType.players()).then(argument("part", HudPartArgumentType.hudPart()).executes(ctx -> {
+            var hudPart = HudPartArgumentType.getHudPart(ctx, "part");
+            EntityArgumentType.getPlayers(ctx, "targets").forEach(target -> API.hideHudParts(target, hudPart));
+            return 1;
+        })));
+        var show = literal("show").then(argument("targets", EntityArgumentType.players()).then(argument("part", HudPartArgumentType.hudPart()).executes(ctx -> {
+            var hudPart = HudPartArgumentType.getHudPart(ctx, "part");
+            EntityArgumentType.getPlayers(ctx, "targets").forEach(target -> API.showHudParts(target, hudPart));
+            return 1;
+        })));
+        return hud.then(hide).then(show);
     }
 }
