@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public final class SyringeApiImpl extends SyringeApi {
     private static final List<Keybinding> REGISTERED_KEYBINDINGS = new ArrayList<>();
@@ -25,57 +26,73 @@ public final class SyringeApiImpl extends SyringeApi {
 
     @Override
     public void displayMessage(@NotNull Player player, @NotNull String id, @NotNull MessageContext context) {
-        var buf = Bufs.create();
-        buf.writeUtf(id);
-        buf.writeComponent(context.message());
-        buf.writeBoolean(context.shadow());
-        buf.writeFloat(context.size());
-        buf.writeInt(context.lineHeight());
-        buf.writeEnum(context.position());
-        buf.writeInt(context.offsetX());
-        buf.writeInt(context.offsetY());
-        buf.writeLong(context.fadein());
-        sendPacket(player, SyringeNetworking.MESSAGE_DISPLAY_ID, buf);
+        sendPacket(player, SyringeNetworking.MESSAGE_DISPLAY_ID, buf -> {
+            buf.writeUtf(id);
+            buf.writeComponent(context.message());
+            buf.writeBoolean(context.shadow());
+            buf.writeFloat(context.size());
+            buf.writeInt(context.lineHeight());
+            buf.writeEnum(context.position());
+            buf.writeInt(context.offsetX());
+            buf.writeInt(context.offsetY());
+            buf.writeLong(context.fadein());
+        });
     }
 
     @Override
     public void discardMessage(@NotNull Player player, @NotNull String id, long fadeout) {
-        var buf = Bufs.create();
-        buf.writeUtf(id);
-        buf.writeLong(fadeout);
-        sendPacket(player, SyringeNetworking.MESSAGE_DISCARD_ID, buf);
+        sendPacket(player, SyringeNetworking.MESSAGE_DISCARD_ID, buf -> {
+            buf.writeUtf(id);
+            buf.writeLong(fadeout);
+        });
     }
 
     @Override
     public void clearMessage(@NotNull Player player) {
-        sendPacket(player, SyringeNetworking.MESSAGE_CLEAR_ID, Bufs.empty());
+        sendPacketWithEmptyBuf(player, SyringeNetworking.MESSAGE_CLEAR_ID);
     }
 
     @Override
     public void setPerspective(@NotNull Player player, @NotNull Perspective perspective) {
-        var buf = Bufs.create();
-        buf.writeEnum(perspective);
-        sendPacket(player, SyringeNetworking.PERSPECTIVE_SET_ID, buf);
+        sendPacket(player, SyringeNetworking.PERSPECTIVE_SET_ID, buf -> {
+            buf.writeEnum(perspective);
+        });
     }
 
     @Override
     public void lockPerspective(@NotNull Player player, boolean lock) {
-        var buf = Bufs.create();
-        buf.writeBoolean(lock);
-        sendPacket(player, SyringeNetworking.PERSPECTIVE_LOCK_ID, buf);
+        sendPacket(player, SyringeNetworking.PERSPECTIVE_LOCK_ID, buf -> {
+            buf.writeBoolean(lock);
+        });
     }
 
     public static void sendRegisterKeybindingsPacket(@NotNull Player player) {
-        var buf = Bufs.create();
-        buf.writeCollection(REGISTERED_KEYBINDINGS, (buf1, keybinding) -> {
-            buf1.writeUtf(keybinding.getIdString());
-            buf1.writeUtf(keybinding.getTranslateKey());
-            buf1.writeEnum(keybinding.getKeyCode());
+        sendPacket(player, SyringeNetworking.KEYBINDING_REGISTER_ID, buf -> {
+            buf.writeCollection(REGISTERED_KEYBINDINGS, (buf1, keybinding) -> {
+                buf1.writeUtf(keybinding.getIdString());
+                buf1.writeUtf(keybinding.getTranslateKey());
+                buf1.writeEnum(keybinding.getKeyCode());
+            });
         });
-        sendPacket(player, SyringeNetworking.KEYBINDING_REGISTER_ID, buf);
     }
 
-    private static void sendPacket(@NotNull Player player, @NotNull Key id, @NotNull FriendlyByteBuf buf) {
+    private static void sendPacket(@NotNull Player player, @NotNull Key id, @NotNull Consumer<FriendlyByteBuf> consumer) {
+        if (!getInstance().isSyringeUser(player)) {
+            return;
+        }
+        var buf = Bufs.create();
+        consumer.accept(buf);
+        forceSendPacket(player, id, buf);
+    }
+
+    private static void sendPacketWithEmptyBuf(@NotNull Player player, @NotNull Key id) {
+        if (!getInstance().isSyringeUser(player)) {
+            return;
+        }
+        forceSendPacket(player, id, Bufs.empty());
+    }
+
+    private static void forceSendPacket(@NotNull Player player, @NotNull Key id, @NotNull FriendlyByteBuf buf) {
         var packetId = new ResourceLocation(id.asString());
         var packet = new ClientboundCustomPayloadPacket(packetId, buf);
         ((CraftPlayer) player).getHandle().connection.send(packet);
