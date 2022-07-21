@@ -67,5 +67,5 @@ public abstract class SyringeApi extends AbstractSyringeApi {
 
     public abstract void setDirection(@NotNull ServerPlayerEntity player, boolean relative, float yaw, float pitch);
 
-    public abstract void zoom(@NotNull ServerPlayerEntity player, double multiplier);
+    public abstract void zoom(@NotNull ServerPlayerEntity player, float multiplier);
 }

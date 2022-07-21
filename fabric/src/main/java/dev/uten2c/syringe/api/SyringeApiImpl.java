@@ -90,9 +90,9 @@ public class SyringeApiImpl extends SyringeApi {
     }
 
     @Override
-    public void zoom(@NotNull ServerPlayerEntity player, double multiplier) {
+    public void zoom(@NotNull ServerPlayerEntity player, float multiplier) {
         sendPacket(player, SyringeNetworking.CAMERA_ZOOM_ID, buf -> {
-            buf.writeDouble(multiplier);
+            buf.writeFloat(multiplier);
         });
     }
 

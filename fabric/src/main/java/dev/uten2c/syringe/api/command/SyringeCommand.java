@@ -106,8 +106,8 @@ public class SyringeCommand {
                 .forEach(target -> API.setDirection(target, relative, yaw, pitch));
             return 1;
         })))));
-        var zoom = literal("zoom").then(argument("targets", EntityArgumentType.players()).then(argument("multiplier", DoubleArgumentType.doubleArg()).executes(ctx -> {
-            var multiplier = DoubleArgumentType.getDouble(ctx, "multiplier");
+        var zoom = literal("zoom").then(argument("targets", EntityArgumentType.players()).then(argument("multiplier", FloatArgumentType.floatArg()).executes(ctx -> {
+            var multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
             EntityArgumentType.getPlayers(ctx, "targets")
                 .forEach(target -> API.zoom(target, multiplier));
             return 1;
