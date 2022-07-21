@@ -39,10 +39,12 @@ public final class SyringeNetworking implements Listener, PluginMessageListener 
     static final Key PERSPECTIVE_LOCK_ID = new NamespacedKey(NAMESPACE, "perspective/lock");
     static final Key CAMERA_SET_DIRECTION_ID = new NamespacedKey(NAMESPACE, "camera/set_direction");
     static final Key CAMERA_ZOOM_ID = new NamespacedKey(NAMESPACE, "camera/zoom");
+    static final Key CAMERA_LOCK_ID = new NamespacedKey(NAMESPACE, "camera/lock");
     static final Key HUD_HIDE_ID = new NamespacedKey(NAMESPACE, "hud/hide");
     static final Key HUD_SHOW_ID = new NamespacedKey(NAMESPACE, "hud/show");
     static final Key KEYBINDING_PRESSED_ID = new NamespacedKey(NAMESPACE, "keybinding/pressed");
     static final Key KEYBINDING_RELEASED_ID = new NamespacedKey(NAMESPACE, "keybinding/released");
+    static final Key MOVEMENT_LOCK_ID = new NamespacedKey(NAMESPACE, "movement/lock");
 
     static void setup(Plugin plugin) {
         var listener = new SyringeNetworking();

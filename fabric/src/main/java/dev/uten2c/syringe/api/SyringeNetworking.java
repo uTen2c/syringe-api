@@ -25,8 +25,10 @@ public final class SyringeNetworking {
     static final Identifier PERSPECTIVE_LOCK_ID = new Identifier(NAMESPACE, "perspective/lock");
     static final Identifier CAMERA_SET_DIRECTION_ID = new Identifier(NAMESPACE, "camera/set_direction");
     static final Identifier CAMERA_ZOOM_ID = new Identifier(NAMESPACE, "camera/zoom");
+    static final Identifier CAMERA_LOCK_ID = new Identifier(NAMESPACE, "camera/lock");
     static final Identifier HUD_HIDE_ID = new Identifier(NAMESPACE, "hud/hide");
     static final Identifier HUD_SHOW_ID = new Identifier(NAMESPACE, "hud/show");
+    static final Identifier MOVEMENT_LOCK_ID = new Identifier(NAMESPACE, "movement/lock");
 
     // C2S
     static final Identifier KEYBINDING_PRESSED_ID = new Identifier(NAMESPACE, "keybinding/pressed");

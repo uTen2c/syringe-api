@@ -34,6 +34,7 @@ public class SyringeCommand {
             .then(perspective())
             .then(hud())
             .then(camera())
+            .then(movement())
         );
     }
 
@@ -112,6 +113,20 @@ public class SyringeCommand {
                 .forEach(target -> API.zoom(target, multiplier));
             return 1;
         })));
-        return literal("camera").then(setDirection).then(zoom);
+        var lock = literal("lock").then(argument("targets", EntityArgumentType.players()).then(argument("lock", BoolArgumentType.bool()).executes(ctx -> {
+            var isLock = BoolArgumentType.getBool(ctx, "lock");
+            EntityArgumentType.getPlayers(ctx, "targets").forEach(target -> API.lockCamera(target, isLock));
+            return 1;
+        })));
+        return literal("camera").then(setDirection).then(zoom).then(lock);
+    }
+
+    private static LiteralArgumentBuilder<ServerCommandSource> movement() {
+        var lock = literal("lock").then(argument("targets", EntityArgumentType.players()).then(argument("lock", BoolArgumentType.bool()).executes(ctx -> {
+            var isLock = BoolArgumentType.getBool(ctx, "lock");
+            EntityArgumentType.getPlayers(ctx, "targets").forEach(target -> API.lockMovement(target, isLock));
+            return 1;
+        })));
+        return literal("movement").then(lock);
     }
 }

@@ -69,6 +69,7 @@ public final class SyringeCommand {
             .then(perspective())
             .then(hud())
             .then(camera())
+            .then(movement())
         );
         try {
             registerArgumentTypes();
@@ -179,7 +180,25 @@ public final class SyringeCommand {
                 .forEach(target -> API.zoom(target, multiplier));
             return 1;
         })));
-        return literal("camera").then(setDirection).then(zoom);
+        var lock = literal("lock").then(argument("targets", EntityArgument.players()).then(argument("lock", BoolArgumentType.bool()).executes(ctx -> {
+            var isLock = BoolArgumentType.getBool(ctx, "lock");
+            EntityArgument.getPlayers(ctx, "targets").stream()
+                .map(ServerPlayer::getBukkitEntity)
+                .forEach(target -> API.lockCamera(target, isLock));
+            return 1;
+        })));
+        return literal("camera").then(setDirection).then(zoom).then(lock);
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> movement() {
+        var lock = literal("lock").then(argument("targets", EntityArgument.players()).then(argument("lock", BoolArgumentType.bool()).executes(ctx -> {
+            var isLock = BoolArgumentType.getBool(ctx, "lock");
+            EntityArgument.getPlayers(ctx, "targets").stream()
+                .map(ServerPlayer::getBukkitEntity)
+                .forEach(target -> API.lockMovement(target, isLock));
+            return 1;
+        })));
+        return literal("movement").then(lock);
     }
 
     @SuppressWarnings("unchecked")

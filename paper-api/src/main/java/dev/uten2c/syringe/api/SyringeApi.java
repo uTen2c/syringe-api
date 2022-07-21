@@ -68,4 +68,8 @@ public abstract class SyringeApi extends AbstractSyringeApi {
     public abstract void setDirection(@NotNull Player player, boolean relative, float yaw, float pitch);
 
     public abstract void zoom(@NotNull Player player, float multiplier);
+
+    public abstract void lockCamera(@NotNull Player player, boolean lock);
+
+    public abstract void lockMovement(@NotNull Player player, boolean lock);
 }

@@ -96,6 +96,20 @@ public class SyringeApiImpl extends SyringeApi {
         });
     }
 
+    @Override
+    public void lockCamera(@NotNull ServerPlayerEntity player, boolean lock) {
+        sendPacket(player, SyringeNetworking.CAMERA_LOCK_ID, buf -> {
+            buf.writeBoolean(lock);
+        });
+    }
+
+    @Override
+    public void lockMovement(@NotNull ServerPlayerEntity player, boolean lock) {
+        sendPacket(player, SyringeNetworking.MOVEMENT_LOCK_ID, buf -> {
+            buf.writeBoolean(lock);
+        });
+    }
+
     public static void sendRegisterKeybindingsPacket(@NotNull ServerPlayerEntity player) {
         sendPacket(player, SyringeNetworking.KEYBINDING_REGISTER_ID, buf -> {
             buf.writeCollection(REGISTERED_KEYBINDINGS, (buf1, keybinding) -> {
