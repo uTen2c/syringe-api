@@ -64,4 +64,8 @@ public abstract class SyringeApi extends AbstractSyringeApi {
     public void showHudParts(@NotNull ServerPlayerEntity player, @NotNull HudPart... hudParts) {
         showHudParts(player, Arrays.asList(hudParts));
     }
+
+    public abstract void setDirection(@NotNull ServerPlayerEntity player, boolean relative, float yaw, float pitch);
+
+    public abstract void zoom(@NotNull ServerPlayerEntity player, double multiplier);
 }

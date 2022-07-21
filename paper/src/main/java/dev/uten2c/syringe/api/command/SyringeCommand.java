@@ -68,6 +68,7 @@ public final class SyringeCommand {
             .then(message())
             .then(perspective())
             .then(hud())
+            .then(camera())
         );
         try {
             registerArgumentTypes();
@@ -159,6 +160,26 @@ public final class SyringeCommand {
             return 1;
         })));
         return literal("hud").then(hide).then(show);
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> camera() {
+        var setDirection = literal("set_direction").then(argument("targets", EntityArgument.players()).then(argument("relative", BoolArgumentType.bool()).then(argument("yaw", FloatArgumentType.floatArg()).then(argument("pitch", FloatArgumentType.floatArg()).executes(ctx -> {
+            var relative = BoolArgumentType.getBool(ctx, "relative");
+            var yaw = FloatArgumentType.getFloat(ctx, "yaw");
+            var pitch = FloatArgumentType.getFloat(ctx, "pitch");
+            EntityArgument.getPlayers(ctx, "targets").stream()
+                .map(ServerPlayer::getBukkitEntity)
+                .forEach(target -> API.setDirection(target, relative, yaw, pitch));
+            return 1;
+        })))));
+        var zoom = literal("zoom").then(argument("targets", EntityArgument.players()).then(argument("multiplier", DoubleArgumentType.doubleArg()).executes(ctx -> {
+            var multiplier = DoubleArgumentType.getDouble(ctx, "multiplier");
+            EntityArgument.getPlayers(ctx, "targets").stream()
+                .map(ServerPlayer::getBukkitEntity)
+                .forEach(target -> API.zoom(target, multiplier));
+            return 1;
+        })));
+        return literal("camera").then(setDirection).then(zoom);
     }
 
     @SuppressWarnings("unchecked")

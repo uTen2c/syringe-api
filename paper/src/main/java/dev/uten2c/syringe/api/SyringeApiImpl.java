@@ -82,6 +82,22 @@ public final class SyringeApiImpl extends SyringeApi {
         });
     }
 
+    @Override
+    public void setDirection(@NotNull Player player, boolean relative, float yaw, float pitch) {
+        sendPacket(player, SyringeNetworking.CAMERA_SET_DIRECTION_ID, buf -> {
+            buf.writeBoolean(relative);
+            buf.writeFloat(yaw);
+            buf.writeFloat(pitch);
+        });
+    }
+
+    @Override
+    public void zoom(@NotNull Player player, double multiplier) {
+        sendPacket(player, SyringeNetworking.CAMERA_ZOOM_ID, buf -> {
+            buf.writeDouble(multiplier);
+        });
+    }
+
     public static void sendRegisterKeybindingsPacket(@NotNull Player player) {
         sendPacket(player, SyringeNetworking.KEYBINDING_REGISTER_ID, buf -> {
             buf.writeCollection(REGISTERED_KEYBINDINGS, (buf1, keybinding) -> {
