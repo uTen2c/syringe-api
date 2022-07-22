@@ -16,10 +16,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class SyringeApiImpl extends SyringeApi {
     private static final List<Keybinding> REGISTERED_KEYBINDINGS = new ArrayList<>();
+
+    @Override
+    public boolean isSyringeUser(@NotNull Player player) {
+        return isSyringeUser(player.getUniqueId());
+    }
+
+    @Override
+    public Optional<SyringeVersion> getSyringeVersion(@NotNull Player player) {
+        return getSyringeVersion(player.getUniqueId());
+    }
 
     @Override
     public void registerKeybinding(@NotNull Keybinding keybinding) {

@@ -14,10 +14,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class SyringeApiImpl extends SyringeApi {
     private static final List<Keybinding> REGISTERED_KEYBINDINGS = new ArrayList<>();
+
+    @Override
+    public boolean isSyringeUser(@NotNull ServerPlayerEntity player) {
+        return isSyringeUser(player.getUuid());
+    }
+
+    @Override
+    public Optional<SyringeVersion> getSyringeVersion(@NotNull ServerPlayerEntity player) {
+        return getSyringeVersion(player.getUuid());
+    }
 
     @Override
     public void registerKeybinding(@NotNull Keybinding keybinding) {

@@ -3,49 +3,26 @@ package dev.uten2c.syringe.api.keybinding;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class Keybinding implements IKeybinding {
-    private final Identifier id;
-    private final String translateKey;
-    private final KeyCode keyCode;
-
-    public Keybinding(@NotNull Identifier id, @NotNull String translateKey, @NotNull KeyCode keyCode) {
-        this.id = id;
-        this.translateKey = translateKey;
-        this.keyCode = keyCode;
+public class Keybinding extends AbstractKeybinding<Identifier> {
+    public Keybinding(@NotNull Identifier identifier, @NotNull String translateKey, @NotNull KeyCode keyCode) {
+        super(identifier, translateKey, keyCode);
     }
 
-    public Keybinding(@NotNull Identifier id, @NotNull KeyCode keyCode) {
-        this.id = id;
-        this.translateKey = createTranslateKey(id);
-        this.keyCode = keyCode;
+    public Keybinding(@NotNull Identifier identifier, @NotNull KeyCode keyCode) {
+        super(identifier, keyCode);
     }
 
-    public Keybinding(@NotNull Identifier id, @NotNull String translateKey) {
-        this.id = id;
-        this.translateKey = translateKey;
-        this.keyCode = KeyCode.ESCAPE;
-    }
-
-    public @NotNull Identifier getId() {
-        return id;
+    public Keybinding(@NotNull Identifier identifier, @NotNull String translateKey) {
+        super(identifier, translateKey);
     }
 
     @Override
     public @NotNull String getIdString() {
-        return id.toString();
+        return getId().toString();
     }
 
     @Override
-    public @NotNull String getTranslateKey() {
-        return translateKey;
-    }
-
-    @Override
-    public @NotNull KeyCode getKeyCode() {
-        return keyCode;
-    }
-
-    private static @NotNull String createTranslateKey(@NotNull Identifier key) {
-        return String.format("key.%s.%s", key.getNamespace(), key.getPath());
+    protected @NotNull String createTranslateKey(@NotNull Identifier identifier) {
+        return identifier.toTranslationKey("key");
     }
 }
