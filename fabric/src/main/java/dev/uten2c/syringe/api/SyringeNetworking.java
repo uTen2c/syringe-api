@@ -10,6 +10,8 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.*;
+
 public final class SyringeNetworking {
     public static final String NAMESPACE = "syringe";
 
@@ -33,6 +35,8 @@ public final class SyringeNetworking {
     // C2S
     static final Identifier KEYBINDING_PRESSED_ID = new Identifier(NAMESPACE, "keybinding/pressed");
     static final Identifier KEYBINDING_RELEASED_ID = new Identifier(NAMESPACE, "keybinding/released");
+
+    private static final Map<UUID, Set<Identifier>> PRESSING_KEYS = new HashMap<>();
 
     private SyringeNetworking() {
     }
@@ -61,11 +65,19 @@ public final class SyringeNetworking {
 
     private static void onKeyPressed(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         var id = buf.readIdentifier();
+        var pressingKeys = PRESSING_KEYS.getOrDefault(player.getUuid(), new HashSet<>());
+        pressingKeys.add(id);
+        PRESSING_KEYS.put(player.getUuid(), pressingKeys);
         SyringeKeybindingEvents.PRESSED.invoker().onPressed(player, id);
     }
 
     private static void onKeyReleased(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
         var id = buf.readIdentifier();
-        SyringeKeybindingEvents.RELEASED.invoker().onReleased(player, id);
+        var pressingKeys = PRESSING_KEYS.getOrDefault(player.getUuid(), new HashSet<>());
+        if (pressingKeys.contains(id)) {
+            pressingKeys.remove(id);
+            PRESSING_KEYS.put(player.getUuid(), pressingKeys);
+            SyringeKeybindingEvents.RELEASED.invoker().onReleased(player, id);
+        }
     }
 }
